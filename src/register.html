@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="en">
+    <head>
+      <meta charset="utf-8">
+      <meta http-equiv="x-ua-compatible" content="ie=edge">
+      <title>Meet</title>
+      <meta name="description" content="">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <link href='https://fonts.googleapis.com/css?family=Lato' rel='stylesheet' type='text/css'>
+      <link rel="stylesheet" href="css/main.css">
+    </head>
+    <body>
+      <header class="main-header">
+        <a href="/"><h1>MEET</h1></a>
+        <a href="/index.html"><div id="link"><span>Home</span></div></a>
+      </header>
+
+      <div id="main">
+        <progress id="progressBar" value="0" max="100">70 %</progress>
+        <div class="register-form">
+          <form>
+            <h5>Required fields</h5>
+
+            <label for"name" style="display: none" />Name: </label>
+            <input type="text" required id="name" onKeyup="updateProgressBar()" placeholder="Full name" autofocus autocomplete="name"/>
+            <br>
+            <div style="margin-bottom: 20px;"></div>
+            <br>
+
+            <label for"email" style="display: none" />Email: </label>
+            <input type="email" required id="email" onBlur="validateEmail()" placeholder="Email" autocomplete="email"/>
+            <br>
+            <div id="emailErrorMessage"></div>
+            <br>
+
+            <label for"password" style="display: none" />Password: </label>
+            <input type="password" required id="password" onBlur="validatePassword()" placeholder="Password" minlength="6"/>
+            <br>
+            <div id="passwordErrorMessage"></div>
+            <br>
+
+            <label for"confirmpassword" style="display: none" />Confirm password: </label>
+            <input type="password" required id="confirmpassword" onKeyup="validatePassword()" placeholder="Confirm password" minlength="6"/>
+            <br>
+            <div id="confirmPasswordErrorMessage"></div>
+            <br>
+
+
+            <!-- Optional fields -->
+            <h5>Optional fields</h5>
+            <label for"employer" style="display: none" />Employer: </label>
+            <input type="text" id="employer" onKeyup="" placeholder="Employer"/>
+            <br><br>
+
+            <label for"jobtitle" style="display: none" />Job title: </label>
+            <input type="text" id="jobtitle" onKeyup="" placeholder="Job title"/>
+            <br><br>
+
+            <label for"birthday" style="display: none" />Birthday: </label>
+            <input placeholder="Birthday" class="textbox-n" onKeyup="" type="text" onfocus="(this.type='date')"  id="birthday">
+            <br><br>
+
+
+            <button onclick="registerValidate(); return false" id="registersubmit" style="display: inline-block">Register</button>
+          </form>
+          <div id="success"></div>
+        </div>
+      </div>
+
+      <script>
+
+        function updateProgressBar(from, status) {
+          var total = 0;
+          if (document.getElementById("email").value.match("[^@]+@[^@]+\.[a-zA-Z]{2,}")) {
+            total += 25;
+          }
+
+          var one = document.getElementById("password").value;
+          var two = document.getElementById("confirmpassword").value;
+          if ((one == two) & one != "" || two != "") {
+            total += 25;
+          }
+
+          var p = document.getElementById('password').value,
+          errors = [];
+          if (p.length < 8) {
+            errors.push("Your password must be at least 8 characters");
+          }
+          if (p.search(/[a-z]/i) < 0) {
+            errors.push("Your password must contain at least one letter.");
+          }
+          if (p.search(/[0-9]/) < 0) {
+            errors.push("Your password must contain at least one digit.");
+          }
+          if (errors.length <= 0) {
+            total += 25;
+          }
+
+          if (document.getElementById("name").value != "") {
+            total += 25;
+          }
+          document.getElementById("progressBar").value = total;
+        }
+
+        function registerValidate() {
+            var validEmail = validateEmail();
+            var validPassword = validatePassword();
+
+          if (validEmail & validPassword) {
+            document.getElementById("passwordErrorMessage").innerHTML = "";
+            document.getElementById("emailErrorMessage").innerHTML = "";
+            document.getElementById("success").innerHTML = "Successfully registered!";
+          }
+        }
+
+        function validateEmail() {
+          var valid = true;
+          if (document.getElementById("email").value.match("[^@]+@[^@]+\.[a-zA-Z]{2,}")) {
+            document.getElementById("emailErrorMessage").innerHTML = "";
+          } else {
+            document.getElementById("emailErrorMessage").innerHTML = "<br>Please provide a correct email address";
+            document.getElementById("success").innerHTML = "";
+            valid = false;
+          }
+          updateProgressBar("email", valid);
+          return valid;
+        }
+
+        function validatePassword() {
+          var valid = true;
+          var one = document.getElementById("password").value;
+          var two = document.getElementById("confirmpassword").value;
+          if (one != two) {
+            document.getElementById("confirmPasswordErrorMessage").innerHTML = "The passwords do not match";
+            document.getElementById("success").innerHTML = "";
+            valid = false;
+          } else {
+            document.getElementById("confirmPasswordErrorMessage").innerHTML = "";
+          }
+
+          var p = document.getElementById('password').value,
+          errors = [];
+          if (p.length < 8) {
+            errors.push("Your password must be at least 8 characters");
+          }
+          if (p.search(/[a-z]/i) < 0) {
+            errors.push("Your password must contain at least one letter.");
+          }
+          if (p.search(/[0-9]/) < 0) {
+            errors.push("Your password must contain at least one digit.");
+          }
+          if (errors.length > 0) {
+            document.getElementById("passwordErrorMessage").innerHTML = errors.join("<br><br>");
+            document.getElementById("success").innerHTML = "";
+            valid = false;
+          } else {
+            document.getElementById("passwordErrorMessage").innerHTML = "";
+          }
+          updateProgressBar("password", valid);
+          return valid;
+        }
+
+        function onFormChange() {
+          registerValidate();
+        }
+
+        var forms = document.getElementsByTagName('form');
+        for (var i = 0; i < forms.length; i++) {
+            forms[i].addEventListener('invalid', function(e) {
+                e.preventDefault();
+                //Possibly implement your own here.
+            }, true);
+        }
+      </script>
+    </body>
+</html>
